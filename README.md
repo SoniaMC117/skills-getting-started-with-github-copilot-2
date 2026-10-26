@@ -2,6 +2,44 @@
 
 _Get started using GitHub Copilot in less than an hour._
 
+## API de saludo, fecha y tiempo (.NET)
+
+La API independiente en `src/SaludoApi` utiliza ASP.NET Core y requiere el SDK
+de .NET 10. No modifica la aplicación Python del ejercicio.
+
+Desde la raíz del repositorio:
+
+```bash
+dotnet run --project src/SaludoApi --urls http://localhost:5000
+```
+
+```bash
+# Madrid por defecto
+curl http://localhost:5000/
+
+# Otra ubicación (latitud y longitud en grados decimales)
+curl "http://localhost:5000/?latitud=41.3874&longitud=2.1686"
+```
+
+`GET /` devuelve JSON con `saludo`, `fecha` actual (`AAAA-MM-DD`, en UTC),
+`zonaHoraria`, `ubicacion`, `fuente` y `prevision` para hoy y los dos días
+siguientes. La previsión real procede de [Open-Meteo](https://open-meteo.com/),
+sin clave de API, y requiere acceso a Internet. No se generan datos aleatorios.
+En `prevision`, los arrays `time`, `temperature_2m_max`, `temperature_2m_min`
+y `weather_code` corresponden a las mismas fechas: temperaturas en °C y
+[códigos meteorológicos WMO](https://open-meteo.com/en/docs#weathervariables).
+
+Las coordenadas omitidas usan los valores de Madrid (40.4168, -3.7038).
+Los parámetros no numéricos o fuera de rango devuelven HTTP 400. Si el proveedor
+no responde en diez segundos, falla o envía una respuesta no válida, la API
+devuelve HTTP 502 sin inventar una previsión.
+
+Para compilar:
+
+```bash
+dotnet build src/SaludoApi
+```
+
 ## Welcome
 
 - **Who is this for**: Developers at any experience level looking to accelerate their code workflow.
